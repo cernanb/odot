@@ -8,9 +8,17 @@
 </head>
 <body>
 
-	<% flash.each do |type, msg| %>
+	<div>
+		<h1><%= link_to "Odot", root_path %></h1>
+		<ul>
+			<li><%= link_to "Todo Lists", todo_lists_path %>
+		</ul>
+		<br class="clear" />
+	</div>
+
+	<% flash.each do |type, message| %>
 	<div class="alert flash <%= type %>">
-		<%= msg %>
+		<%= message %>
 	</div>
 	<% end %>
 
