@@ -1,22 +1,23 @@
 class TodoItemsController < ApplicationController
-  before_action :find_todo_list 
+  before_action :require_user
+  before_action :find_todo_list
 
   def index
   end
 
   def new
-  	@todo_item = @todo_list.todo_items.new
+    @todo_item = @todo_list.todo_items.new
   end
 
   def create
-  	@todo_item = @todo_list.todo_items.new(todo_item_params)
-  	if @todo_item.save
-  		flash[:success] = "Added todo list item."
-  		redirect_to todo_list_todo_items_path
-  	else
-  		flash[:error] = "There was a problem adding that todo list item."
-  		render action: :new
-  	end
+    @todo_item = @todo_list.todo_items.new(todo_item_params)
+    if @todo_item.save
+      flash[:success] = "Added todo list item."
+      redirect_to todo_list_todo_items_path
+    else
+      flash[:error] = "There was a problem adding that todo list item."
+      render action: :new
+    end
   end
 
   def edit
@@ -24,7 +25,6 @@ class TodoItemsController < ApplicationController
   end
 
   def update
-    
     @todo_item = @todo_list.todo_items.find(params[:id])
     if @todo_item.update_attributes(todo_item_params)
       flash[:success] = "Saved todo list item."
@@ -32,7 +32,7 @@ class TodoItemsController < ApplicationController
     else
       flash[:error] = "That todo item could not be saved."
       render action: :edit
-    end      
+    end
   end
 
   def destroy
@@ -48,7 +48,7 @@ class TodoItemsController < ApplicationController
   def complete
     @todo_item = @todo_list.todo_items.find(params[:id])
     @todo_item.update_attribute(:completed_at, Time.now)
-    redirect_to todo_list_todo_items_path, notice: "Todo item marked as complete." 
+    redirect_to todo_list_todo_items_path, notice: "Todo item marked as complete."
   end
 
   def url_options
@@ -57,11 +57,11 @@ class TodoItemsController < ApplicationController
 
   private
   def find_todo_list
-    @todo_list = TodoList.find(params[:todo_list_id])
+    @todo_list = current_user.todo_lists.find(params[:todo_list_id])
   end
 
   def todo_item_params
-  	params[:todo_item].permit(:content)
+    params[:todo_item].permit(:content)
   end
 
 end
